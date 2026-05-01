@@ -50,6 +50,4 @@ You can also trigger a deploy manually from the **Actions** tab → **Deploy Hon
         └── deploy.yml                # GitHub Actions CI/CD
 ```
 
-## 🛠 Local development
 
-No build step needed — just open `index.html` in your browser.
