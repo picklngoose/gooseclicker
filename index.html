@@ -614,16 +614,22 @@ async function saveGame() {
 }
 
 async function loadGame() {
+  let result;
   try {
-    const result = await window.storage.get(SAVE_KEY);
-    if (!result) return false;
+    result = await window.storage.get(SAVE_KEY);
+  } catch (e) {
+    // Key doesn't exist yet (first time playing) — not a real error
+    return false;
+  }
+  if (!result || !result.value) return false;
+  try {
     const d = JSON.parse(result.value);
-    state.honks          = d.honks          ?? 0;
-    state.allTimeHonks   = d.allTimeHonks   ?? 0;
-    state.grandTotalHonks= d.grandTotalHonks?? 0;
-    state.totalClicks    = d.totalClicks    ?? 0;
-    state.rebirthCount   = d.rebirthCount   ?? 0;
-    state.darkMode       = d.darkMode       ?? false;
+    state.honks           = d.honks           ?? 0;
+    state.allTimeHonks    = d.allTimeHonks    ?? 0;
+    state.grandTotalHonks = d.grandTotalHonks ?? 0;
+    state.totalClicks     = d.totalClicks     ?? 0;
+    state.rebirthCount    = d.rebirthCount    ?? 0;
+    state.darkMode        = d.darkMode        ?? false;
     if (d.upgradeCounts) {
       Object.keys(d.upgradeCounts).forEach(id => {
         if (id in upgradeCounts) upgradeCounts[id] = d.upgradeCounts[id] ?? 0;
@@ -631,6 +637,7 @@ async function loadGame() {
     }
     return true;
   } catch (e) {
+    console.error('Failed to parse save data:', e);
     return false;
   }
 }
