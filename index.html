@@ -3,29 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>goose clicker 🪿</title>
+  <title>Goose Clicker 🪿</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --grass:    #4caf50;
-      --grass-d:  #388e3c;
-      --gold:     #ffd54f;
-      --gold-d:   #ffb300;
-      --ink:      #1b5e20;
-      --panel:    #ffffffcc;
-      --panel-s:  #ffffff;
-      --shadow:   0 4px 24px #0002;
-      --bg:       linear-gradient(175deg, #b9f6ca 0%, #e8f5e9 40%, #fff9c4 100%);
-      --muted:    #555;
-      --teaser:   #999;
-      --border:   #0001;
-      --title-shadow: var(--gold);
+      --grass:         #4caf50;
+      --grass-d:       #388e3c;
+      --gold:          #ffd54f;
+      --gold-d:        #ffb300;
+      --ink:           #1b5e20;
+      --panel:         #ffffffcc;
+      --panel-s:       #ffffff;
+      --shadow:        0 4px 24px #0002;
+      --bg:            linear-gradient(175deg, #b9f6ca 0%, #e8f5e9 40%, #fff9c4 100%);
+      --muted:         #555;
+      --teaser:        #999;
+      --border:        #0001;
+      --title-shadow:  var(--gold);
+      --accent:        #ff7043;
     }
 
-    html, body {
-      height: 100%;
+    body.dark {
+      --grass:         #64b5f6;
+      --grass-d:       #90caf9;
+      --gold:          #ffd54f;
+      --gold-d:        #ffe082;
+      --ink:           #e3f2fd;
+      --panel:         #0d1b2acc;
+      --panel-s:       #0d1b2a;
+      --shadow:        0 4px 24px #0009;
+      --bg:            linear-gradient(175deg, #060f1a 0%, #0a1628 40%, #0d1f3c 100%);
+      --muted:         #90a4ae;
+      --teaser:        #546e7a;
+      --border:        #ffffff0a;
+      --title-shadow:  #1565c0;
+      --accent:        #ff8a65;
     }
 
     body {
@@ -33,32 +47,30 @@
       background: var(--bg);
       min-height: 100vh;
       overflow-x: hidden;
-      overflow-y: auto;
       color: var(--ink);
       transition: background 0.3s, color 0.3s;
     }
 
-    body.dark {
-      --grass:    #64b5f6;
-      --grass-d:  #90caf9;
-      --gold:     #ffd54f;
-      --gold-d:   #ffe082;
-      --ink:      #e3f2fd;
-      --panel:    #0d1b2acc;
-      --panel-s:  #0d1b2a;
-      --shadow:   0 4px 24px #0009;
-      --bg:       linear-gradient(175deg, #060f1a 0%, #0a1628 40%, #0d1f3c 100%);
-      --muted:    #90a4ae;
-      --teaser:   #546e7a;
-      --border:   #ffffff0a;
-      --title-shadow: #1565c0;
-    }
-
+    /* ── HEADER ──────────────────────────────── */
     header {
       text-align: center;
-      padding: 28px 16px 0;
+      padding: 24px 16px 0;
       position: relative;
     }
+    .save-indicator {
+      position: absolute;
+      top: 24px;
+      left: 20px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+      background: var(--panel);
+      border-radius: 99px;
+      padding: 5px 12px;
+      box-shadow: var(--shadow);
+      transition: color 0.3s;
+    }
+    .save-indicator.flash { color: var(--grass-d); }
     .header-btns {
       position: absolute;
       top: 24px;
@@ -71,34 +83,18 @@
       border: 2px solid var(--grass);
       border-radius: 99px;
       padding: 6px 14px;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       cursor: pointer;
       box-shadow: var(--shadow);
-      transition: background 0.2s, transform 0.15s;
+      transition: transform 0.15s;
       color: var(--ink);
       font-family: 'Nunito', sans-serif;
       font-weight: 700;
     }
     .header-btn:hover { transform: scale(1.08); }
-    .save-indicator {
-      position: absolute;
-      top: 24px;
-      left: 20px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      font-weight: 600;
-      background: var(--panel);
-      border-radius: 99px;
-      padding: 5px 12px;
-      box-shadow: var(--shadow);
-      transition: opacity 0.5s;
-    }
-    .save-indicator.flash {
-      color: var(--grass-d);
-    }
     header h1 {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-size: clamp(2rem, 6vw, 3.4rem);
       color: var(--ink);
       letter-spacing: 2px;
       text-shadow: 3px 3px 0 var(--title-shadow);
@@ -116,35 +112,59 @@
       margin-top: 2px;
     }
 
-    .game-layout {
+    /* ── TABS ──────────────────────────────────── */
+    .tab-bar {
       display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 12px 16px 0;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      all: unset;
+      cursor: pointer;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.88rem;
+      padding: 5px 16px;
+      border-radius: 99px;
+      background: var(--panel);
+      color: var(--muted);
+      border: 2px solid transparent;
+      transition: all 0.18s;
+      box-shadow: var(--shadow);
+    }
+    .tab-btn:hover { border-color: var(--grass); color: var(--ink); }
+    .tab-btn.active { background: var(--grass); color: #fff; border-color: var(--grass-d); }
+
+    /* ── LAYOUT ────────────────────────────────── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Game tab uses a two-column flex with sticky goose */
+    #tab-game {
+      display: none;
       gap: 20px;
       max-width: 960px;
-      margin: 20px auto 0;
-      padding: 0 16px 0;
+      margin: 16px auto 0;
+      padding: 0 16px 40px;
       align-items: flex-start;
-      /* Make layout fill remaining viewport so goose stays pinned */
-      height: calc(100vh - 130px);
+    }
+    #tab-game.active {
+      display: flex;
     }
 
+    /* ── GOOSE AREA ────────────────────────────── */
     .goose-area {
-      flex: 1 1 340px;
+      flex: 1 1 320px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      /* Goose side is sticky — stays put while upgrades scroll */
       position: sticky;
-      top: 0;
+      top: 16px;
       align-self: flex-start;
     }
-
-    .goose-stage {
-      position: relative;
-      width: 240px;
-      height: 240px;
-    }
-
+    .goose-stage { position: relative; width: 240px; height: 240px; }
     .goose-btn {
       all: unset;
       cursor: pointer;
@@ -161,156 +181,23 @@
       -webkit-tap-highlight-color: transparent;
     }
     .goose-btn:active { transform: scale(0.88); }
-    .goose-btn.honked  { animation: honk-bounce 0.18s ease; }
-
+    .goose-btn.honked { animation: honk-bounce 0.18s ease; }
     @keyframes honk-bounce {
       0%   { transform: scale(1); }
       40%  { transform: scale(0.85) rotate(-6deg); }
       70%  { transform: scale(1.08) rotate(3deg); }
       100% { transform: scale(1); }
     }
-
     .grass-pad {
-      width: 200px;
-      height: 28px;
+      width: 200px; height: 28px;
       background: var(--grass);
       border-radius: 50%;
       box-shadow: 0 6px 0 var(--grass-d);
       margin-top: -10px;
     }
 
-    .particle {
-      position: fixed;
-      pointer-events: none;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.1rem;
-      color: var(--ink);
-      font-weight: 900;
-      text-shadow: 1px 1px 0 var(--gold);
-      z-index: 999;
-      animation: float-up 0.9s ease-out forwards;
-    }
-    @keyframes float-up {
-      0%   { opacity: 1; transform: translateY(0) scale(1); }
-      100% { opacity: 0; transform: translateY(-80px) scale(0.6); }
-    }
-
-    .upgrades-panel {
-      flex: 0 0 280px;
-      display: flex;
-      flex-direction: column;
-      /* Cap height so it doesn't stretch ugly to the bottom */
-      max-height: min(600px, calc(100vh - 160px));
-      align-self: flex-start;
-    }
-
-    .panel-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.3rem;
-      color: var(--ink);
-      text-align: center;
-      padding: 6px 0 8px;
-      border-bottom: 3px dashed var(--grass);
-      margin-bottom: 0;
-      /* Sticky title — never scrolls */
-      flex-shrink: 0;
-      background: transparent;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-    }
-
-    .upgrade-list-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 0 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--grass) transparent;
-    }
-    .upgrade-list-scroll::-webkit-scrollbar { width: 4px; }
-    .upgrade-list-scroll::-webkit-scrollbar-track { background: transparent; }
-    .upgrade-list-scroll::-webkit-scrollbar-thumb { background: var(--grass); border-radius: 99px; }
-
-    .cat-header {
-      font-family: 'Fredoka One', cursive;
-      font-size: 0.95rem;
-      color: var(--grass-d);
-      margin: 12px 0 4px 2px;
-      letter-spacing: 0.5px;
-    }
-    .cat-header:first-child { margin-top: 2px; }
-
-    .teaser {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--teaser);
-      padding: 10px 6px 4px;
-      font-style: italic;
-    }
-    .teaser span {
-      font-size: 1.1rem;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .upgrade-card {
-      background: var(--panel);
-      border-radius: 14px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: var(--shadow);
-      border: 2px solid transparent;
-      transition: border 0.15s, transform 0.15s, opacity 0.2s;
-      cursor: pointer;
-    }
-    .upgrade-card:hover:not(.locked) {
-      border-color: var(--grass);
-      transform: translateY(-2px);
-    }
-    .upgrade-card.locked {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-    .upgrade-card.locked:hover { transform: none; }
-
-    .upg-icon { font-size: 2rem; flex-shrink: 0; }
-    .upg-info { flex: 1; }
-    .upg-name {
-      font-weight: 800;
-      font-size: 0.95rem;
-      line-height: 1.2;
-    }
-    .upg-desc {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .upg-cost {
-      font-family: 'Fredoka One', cursive;
-      font-size: 0.9rem;
-      color: var(--gold-d);
-      text-align: right;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-    .upg-count {
-      display: inline-block;
-      background: var(--grass);
-      color: #fff;
-      border-radius: 99px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 1px 7px;
-      margin-left: 4px;
-    }
-
+    /* ── STATS & REBIRTH ───────────────────────── */
     .stats-bar {
-      margin-top: 16px;
       background: var(--panel);
       border-radius: 14px;
       padding: 10px 16px;
@@ -333,27 +220,12 @@
       box-shadow: var(--shadow);
       text-align: center;
     }
-    .rebirth-feathers {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1rem;
-      color: var(--gold-d);
-      margin-bottom: 4px;
-    }
-    .rebirth-bonus {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
+    .rebirth-feathers { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--gold-d); margin-bottom: 4px; }
+    .rebirth-bonus { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; }
     .rebirth-bonus strong { color: var(--ink); }
-    .rebirth-req {
-      font-size: 0.72rem;
-      color: var(--teaser);
-      margin-bottom: 8px;
-      font-style: italic;
-    }
+    .rebirth-req { font-size: 0.72rem; color: var(--teaser); margin-bottom: 8px; font-style: italic; }
     .rebirth-btn {
-      all: unset;
-      cursor: pointer;
+      all: unset; cursor: pointer;
       background: linear-gradient(135deg, #ff7043, #ff8a65);
       color: #fff;
       font-family: 'Fredoka One', cursive;
@@ -364,26 +236,249 @@
       transition: transform 0.15s, opacity 0.2s, box-shadow 0.2s;
       display: inline-block;
     }
-    .rebirth-btn:not(:disabled):hover {
-      transform: scale(1.06);
-      box-shadow: 0 5px 18px #ff704388;
-    }
-    .rebirth-btn:disabled, .rebirth-btn.dim {
-      opacity: 0.35;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-    .rebirth-btn.ready {
-      animation: rebirth-pulse 1.6s ease-in-out infinite;
-    }
+    .rebirth-btn.dim { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+    .rebirth-btn.ready { animation: rebirth-pulse 1.6s ease-in-out infinite; }
     @keyframes rebirth-pulse {
       0%, 100% { box-shadow: 0 3px 12px #ff704355; }
       50%       { box-shadow: 0 6px 28px #ff7043cc; transform: scale(1.04); }
     }
 
-    .modal-overlay {
+    /* ── UPGRADES PANEL ────────────────────────── */
+    .upgrades-panel {
+      flex: 0 0 300px;
+      display: flex;
+      flex-direction: column;
+      max-height: min(680px, calc(100vh - 180px));
+      align-self: flex-start;
+    }
+    .panel-header {
+      flex-shrink: 0;
+      padding-bottom: 8px;
+      border-bottom: 3px dashed var(--grass);
+    }
+    .panel-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.25rem;
+      color: var(--ink);
+      text-align: center;
+      padding: 4px 0 6px;
+    }
+    /* bulk buy bar */
+    .bulk-bar {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      padding-top: 6px;
+    }
+    .bulk-btn {
+      all: unset;
+      cursor: pointer;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.78rem;
+      padding: 3px 11px;
+      border-radius: 99px;
+      background: var(--panel);
+      border: 2px solid var(--border);
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .bulk-btn:hover { border-color: var(--grass); color: var(--ink); }
+    .bulk-btn.active { background: var(--grass-d); color: #fff; border-color: var(--grass-d); }
+
+    .upgrade-list-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--grass) transparent;
+    }
+    .upgrade-list-scroll::-webkit-scrollbar { width: 4px; }
+    .upgrade-list-scroll::-webkit-scrollbar-track { background: transparent; }
+    .upgrade-list-scroll::-webkit-scrollbar-thumb { background: var(--grass); border-radius: 99px; }
+
+    .cat-header {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.92rem;
+      color: var(--grass-d);
+      margin: 10px 0 3px 2px;
+    }
+    .cat-header:first-child { margin-top: 2px; }
+
+    .teaser {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--teaser);
+      padding: 10px 6px 4px;
+      font-style: italic;
+    }
+    .teaser span { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+
+    .upgrade-card {
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      border: 2px solid transparent;
+      transition: border 0.15s, transform 0.15s, opacity 0.2s;
+      cursor: pointer;
+    }
+    .upgrade-card:hover:not(.locked) { border-color: var(--grass); transform: translateY(-2px); }
+    .upgrade-card.locked { opacity: 0.45; cursor: not-allowed; }
+    .upgrade-card.locked:hover { transform: none; }
+    .upgrade-card.milestone-glow { border-color: var(--gold-d); box-shadow: 0 0 10px #ffd54f44; }
+
+    .upg-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .upg-info { flex: 1; min-width: 0; }
+    .upg-name { font-weight: 800; font-size: 0.88rem; line-height: 1.2; }
+    .upg-desc { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
+    .upg-milestone { font-size: 0.62rem; color: var(--gold-d); font-weight: 700; margin-top: 2px; }
+    .upg-count {
+      display: inline-block;
+      background: var(--grass);
+      color: #fff;
+      border-radius: 99px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      margin-left: 4px;
+    }
+    .upg-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+    .upg-cost { font-family: 'Fredoka One', cursive; font-size: 0.82rem; color: var(--gold-d); white-space: nowrap; }
+    .upg-bulk-cost { font-size: 0.62rem; color: var(--muted); white-space: nowrap; }
+
+    /* ── FLOATING PARTICLES ────────────────────── */
+    .particle {
       position: fixed;
-      inset: 0;
+      pointer-events: none;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: var(--ink);
+      font-weight: 900;
+      text-shadow: 1px 1px 0 var(--gold);
+      z-index: 9999;
+      animation: float-up 0.9s ease-out forwards;
+    }
+    @keyframes float-up {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) scale(0.6); }
+    }
+
+    /* ── SECONDARY TAB PANELS ──────────────────── */
+    .secondary-panel {
+      max-width: 960px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+    }
+
+    /* achievements */
+    .ach-progress { font-size: 0.82rem; color: var(--muted); text-align: center; font-weight: 700; margin-bottom: 14px; }
+    .ach-section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.05rem;
+      color: var(--ink);
+      margin: 18px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 2px dashed var(--grass);
+    }
+    .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+    .ach-card {
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      transition: border 0.2s;
+    }
+    .ach-card.unlocked { border-color: var(--gold-d); }
+    .ach-card.locked { opacity: 0.4; }
+    .ach-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .ach-name { font-weight: 800; font-size: 0.85rem; }
+    .ach-desc { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+
+    /* perks */
+    .feather-balance {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: var(--gold-d);
+      text-align: center;
+      margin-bottom: 14px;
+      background: var(--panel);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .perks-intro {
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+    .perks-intro strong { color: var(--ink); }
+    .perks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+    .perk-card {
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--border);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .perk-card:hover:not(.locked):not(.maxed) { border-color: var(--gold-d); transform: translateY(-2px); }
+    .perk-card.locked { opacity: 0.4; cursor: not-allowed; }
+    .perk-card.maxed { border-color: var(--grass); cursor: default; }
+    .perk-icon { font-size: 2rem; margin-bottom: 5px; }
+    .perk-name { font-family: 'Fredoka One', cursive; font-size: 0.95rem; margin-bottom: 4px; }
+    .perk-desc { font-size: 0.7rem; color: var(--muted); margin-bottom: 7px; line-height: 1.5; }
+    .perk-level { font-size: 0.72rem; font-weight: 800; color: var(--gold-d); margin-bottom: 5px; }
+    .perk-cost { font-family: 'Fredoka One', cursive; font-size: 0.82rem; color: var(--accent); }
+    .perk-cost.can-afford { color: var(--grass-d); }
+
+    /* stats */
+    .stats-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+    .stat-card { background: var(--panel); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); text-align: center; }
+    .stat-icon { font-size: 1.8rem; margin-bottom: 5px; }
+    .stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--ink); margin-top: 4px; }
+
+    /* ── ACHIEVEMENT TOAST ─────────────────────── */
+    .ach-toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--panel-s);
+      border: 2px solid var(--gold-d);
+      border-radius: 16px;
+      padding: 12px 20px;
+      display: flex; gap: 10px; align-items: center;
+      box-shadow: 0 8px 32px #0004;
+      z-index: 2000;
+      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+      max-width: 320px;
+    }
+    .ach-toast.show { transform: translateX(-50%) translateY(0); }
+    .ach-toast-icon { font-size: 1.8rem; }
+    .ach-toast-title { font-family: 'Fredoka One', cursive; font-size: 0.88rem; color: var(--gold-d); }
+    .ach-toast-name { font-weight: 800; font-size: 0.92rem; color: var(--ink); }
+
+    /* ── MODALS ────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
       background: #000a;
       z-index: 1000;
       display: flex;
@@ -397,75 +492,44 @@
       background: var(--panel-s);
       border-radius: 20px;
       padding: 32px 28px;
-      max-width: 360px;
+      max-width: 380px;
       width: 90%;
       text-align: center;
       box-shadow: 0 12px 48px #0006;
     }
-    .modal-box h2 {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.8rem;
-      color: #ff7043;
-      margin-bottom: 8px;
-    }
-    .modal-box p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
+    .modal-box h2 { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--accent); margin-bottom: 8px; }
+    .modal-box.danger h2 { color: #e53935; }
+    .modal-box p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
     .modal-box p strong { color: var(--ink); }
     .modal-actions { display: flex; gap: 10px; justify-content: center; }
     .modal-confirm {
-      all: unset;
-      cursor: pointer;
+      all: unset; cursor: pointer;
       background: linear-gradient(135deg, #ff7043, #ff8a65);
-      color: #fff;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1rem;
-      padding: 10px 24px;
-      border-radius: 99px;
-      box-shadow: 0 3px 12px #ff704355;
+      color: #fff; font-family: 'Fredoka One', cursive;
+      font-size: 1rem; padding: 10px 24px;
+      border-radius: 99px; box-shadow: 0 3px 12px #ff704355;
       transition: transform 0.15s;
     }
     .modal-confirm:hover { transform: scale(1.05); }
     .modal-cancel {
-      all: unset;
-      cursor: pointer;
-      background: var(--panel);
-      color: var(--ink);
+      all: unset; cursor: pointer;
+      background: var(--panel); color: var(--ink);
       font-family: 'Fredoka One', cursive;
-      font-size: 1rem;
-      padding: 10px 24px;
-      border-radius: 99px;
-      border: 2px solid var(--grass);
+      font-size: 1rem; padding: 10px 24px;
+      border-radius: 99px; border: 2px solid var(--grass);
       transition: transform 0.15s;
     }
     .modal-cancel:hover { transform: scale(1.05); }
 
-    /* Reset confirm modal */
-    .modal-box.danger h2 { color: #e53935; }
+    /* ── OFFLINE MODAL ─────────────────────────── */
+    .offline-modal .modal-box h2 { color: var(--grass-d); }
 
+    /* ── RESPONSIVE ────────────────────────────── */
     @media (max-width: 640px) {
-      .game-layout {
-        flex-direction: column;
-        align-items: center;
-        height: auto;
-      }
-      .goose-area {
-        position: static;
-        width: 100%;
-      }
-      .upgrades-panel {
-        width: 100%;
-        max-width: 400px;
-        max-height: none;
-      }
-      .upgrade-list-scroll {
-        overflow-y: visible;
-        max-height: none;
-        padding-bottom: 40px;
-      }
+      #tab-game { flex-direction: column; align-items: center; }
+      .goose-area { position: static; width: 100%; }
+      .upgrades-panel { width: 100%; max-width: 400px; max-height: none; flex: none; }
+      .upgrade-list-scroll { overflow-y: visible; max-height: none; padding-bottom: 40px; }
     }
   </style>
 </head>
@@ -479,46 +543,27 @@
   </div>
   <h1>🪿 Goose Clicker</h1>
   <div class="honk-counter" id="honkDisplay">0 HONKS</div>
-  <div class="hps" id="hpsDisplay">0 honks / sec</div>
+  <div class="hps" id="hpsDisplay">0 / sec · 1 / click</div>
 </header>
 
-<!-- Rebirth modal -->
-<div class="modal-overlay hidden" id="rebirthModal">
-  <div class="modal-box">
-    <h2>🪶 Rebirth?</h2>
-    <p id="modalText">Reset your progress and earn a <strong>Golden Feather</strong> that permanently boosts all honk production.</p>
-    <div class="modal-actions">
-      <button class="modal-confirm" id="modalConfirm">Rebirth!</button>
-      <button class="modal-cancel" id="modalCancel">Cancel</button>
-    </div>
-  </div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="game">🪿 Game</button>
+  <button class="tab-btn" data-tab="achievements">🏆 Achievements</button>
+  <button class="tab-btn" data-tab="perks">✨ Perks</button>
+  <button class="tab-btn" data-tab="stats">📊 Stats</button>
 </div>
 
-<!-- Reset modal -->
-<div class="modal-overlay hidden" id="resetModal">
-  <div class="modal-box danger">
-    <h2>⚠️ Reset All?</h2>
-    <p>This will <strong>permanently delete</strong> all your progress, including Golden Feathers. This cannot be undone.</p>
-    <div class="modal-actions">
-      <button class="modal-confirm" id="resetConfirm" style="background: linear-gradient(135deg,#e53935,#ef5350)">Delete Everything</button>
-      <button class="modal-cancel" id="resetCancel">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div class="game-layout">
-
+<!-- ═══ GAME TAB ══════════════════════════════════════════ -->
+<div class="tab-content active" id="tab-game">
   <div class="goose-area">
     <div class="goose-stage">
       <button class="goose-btn" id="gooseBtn" aria-label="Click the goose">🪿</button>
     </div>
     <div class="grass-pad"></div>
-
     <div class="stats-bar">
       Total clicks: <span id="totalClicks">0</span><br>
       All-time honks: <span id="allTimeHonks">0</span>
     </div>
-
     <div class="rebirth-bar">
       <div class="rebirth-feathers" id="rebirthFeathers">🪶 Golden Feathers: 0</div>
       <div class="rebirth-bonus" id="rebirthBonus">No bonus yet</div>
@@ -528,73 +573,213 @@
   </div>
 
   <div class="upgrades-panel">
-    <div class="panel-title">Upgrades</div>
+    <div class="panel-header">
+      <div class="panel-title">Upgrades</div>
+      <div class="bulk-bar">
+        <button class="bulk-btn active" data-bulk="1">×1</button>
+        <button class="bulk-btn" data-bulk="10">×10</button>
+        <button class="bulk-btn" data-bulk="50">×50</button>
+        <button class="bulk-btn" data-bulk="max">Max</button>
+      </div>
+    </div>
     <div class="upgrade-list-scroll">
       <div id="upgradeList"></div>
     </div>
   </div>
+</div>
 
+<!-- ═══ ACHIEVEMENTS TAB ══════════════════════════════════ -->
+<div class="tab-content" id="tab-achievements">
+  <div class="secondary-panel">
+    <div class="ach-progress" id="achProgress">0 / 0 achievements unlocked</div>
+    <div id="achList"></div>
+  </div>
+</div>
+
+<!-- ═══ PERKS TAB ═════════════════════════════════════════ -->
+<div class="tab-content" id="tab-perks">
+  <div class="secondary-panel">
+    <div class="feather-balance" id="featherBalance">🪶 0 Golden Feathers available</div>
+    <div class="perks-intro">
+      Spend <strong>Golden Feathers</strong> earned through Rebirth on permanent upgrades that carry across all runs. Choose wisely!
+    </div>
+    <div class="perks-grid" id="perksList"></div>
+  </div>
+</div>
+
+<!-- ═══ STATS TAB ═════════════════════════════════════════ -->
+<div class="tab-content" id="tab-stats">
+  <div class="secondary-panel">
+    <div class="stats-full" id="statsFull"></div>
+  </div>
+</div>
+
+<!-- ═══ MODALS ════════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="rebirthModal">
+  <div class="modal-box">
+    <h2>🪶 Rebirth?</h2>
+    <p id="rebirthModalText">Reset your progress and earn a Golden Feather.</p>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="rebirthConfirm">Rebirth!</button>
+      <button class="modal-cancel" id="rebirthCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="resetModal">
+  <div class="modal-box danger">
+    <h2>⚠️ Reset All?</h2>
+    <p>This will <strong>permanently delete</strong> all your progress, including Golden Feathers and Perks. This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="resetConfirm" style="background:linear-gradient(135deg,#e53935,#ef5350)">Delete Everything</button>
+      <button class="modal-cancel" id="resetCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden offline-modal" id="offlineModal">
+  <div class="modal-box">
+    <h2>🌙 Welcome Back!</h2>
+    <p id="offlineText">Your geese were busy...</p>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="offlineOk">Collect!</button>
+    </div>
+  </div>
+</div>
+
+<div class="ach-toast" id="achToast">
+  <div class="ach-toast-icon" id="achToastIcon">🏆</div>
+  <div>
+    <div class="ach-toast-title">Achievement Unlocked!</div>
+    <div class="ach-toast-name" id="achToastName">...</div>
+  </div>
 </div>
 
 <script>
-// ── UPGRADE DEFINITIONS ───────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// UPGRADE DEFINITIONS  (immutable; counts stored separately)
+// ══════════════════════════════════════════════════════════
 const UPGRADE_DEFS = [
-  { id:'louder',        type:'click', icon:'📢', name:'Louder Honk',          desc:'+1 honk per click',             baseCost:50,     costScale:1.5,  value:1,       unlockAt:0 },
-  { id:'brasshorn',     type:'click', icon:'📯', name:'Brass Horn',           desc:'+3 honks per click',            baseCost:250,    costScale:1.52, value:3,       unlockAt:80 },
-  { id:'megaphone',     type:'click', icon:'🔊', name:'Megaphone',            desc:'+10 honks per click',           baseCost:1200,   costScale:1.55, value:10,      unlockAt:500 },
-  { id:'airhorn',       type:'click', icon:'💨', name:'Air Horn',             desc:'+35 honks per click',           baseCost:8000,   costScale:1.58, value:35,      unlockAt:3000 },
-  { id:'foghorn',       type:'click', icon:'🌫️', name:'Foghorn',              desc:'+120 honks per click',          baseCost:50000,  costScale:1.62, value:120,     unlockAt:20000 },
-  { id:'bullhorn',      type:'click', icon:'🗣️', name:'Bull Horn',            desc:'+400 honks per click',          baseCost:220000, costScale:1.65, value:400,     unlockAt:100000 },
-  { id:'honkstorm',     type:'click', icon:'🌪️', name:'HONKSTORM',            desc:'+1,200 honks per click',        baseCost:1e6,    costScale:1.68, value:1200,    unlockAt:500000 },
-  { id:'sonic',         type:'click', icon:'⚡', name:'Sonic Shriek',         desc:'+5,000 honks per click',        baseCost:7e6,    costScale:1.7,  value:5000,    unlockAt:3e6 },
-  { id:'resonance',     type:'click', icon:'🎵', name:'Resonance Wave',       desc:'+18,000 honks per click',       baseCost:50e6,   costScale:1.72, value:18000,   unlockAt:20e6 },
-  { id:'quantum',       type:'click', icon:'🔮', name:'Quantum Honk',         desc:'+65,000 honks per click',       baseCost:400e6,  costScale:1.75, value:65000,   unlockAt:150e6 },
-  { id:'cosmic',        type:'click', icon:'🌌', name:'Cosmic Bellow',        desc:'+250,000 honks per click',      baseCost:3e9,    costScale:1.78, value:250000,  unlockAt:1e9 },
-  { id:'goosescream',   type:'click', icon:'😱', name:'Goose Scream',         desc:'+1M honks per click',           baseCost:25e9,   costScale:1.8,  value:1e6,     unlockAt:8e9 },
-  { id:'thunderclap',   type:'click', icon:'⛈️', name:'Thunder Clap',         desc:'+4M honks per click',           baseCost:200e9,  costScale:1.82, value:4e6,     unlockAt:70e9 },
-  { id:'hyperblast',    type:'click', icon:'🚀', name:'Hypersonic Blast',     desc:'+16M honks per click',          baseCost:1.5e12, costScale:1.85, value:16e6,    unlockAt:600e9 },
-  { id:'dimshriek',     type:'click', icon:'🕳️', name:'Dimensional Shriek',   desc:'+65M honks per click',          baseCost:12e12,  costScale:1.87, value:65e6,    unlockAt:5e12 },
-  { id:'galactic',      type:'click', icon:'🌠', name:'Galactic Honk',        desc:'+250M honks per click',         baseCost:100e12, costScale:1.88, value:250e6,   unlockAt:40e12 },
-  { id:'stellar',       type:'click', icon:'💫', name:'Stellar Explosion',    desc:'+1B honks per click',           baseCost:800e12, costScale:1.89, value:1e9,     unlockAt:300e12 },
-  { id:'supernova',     type:'click', icon:'🌟', name:'Supernova Honk',       desc:'+4B honks per click',           baseCost:7e15,   costScale:1.9,  value:4e9,     unlockAt:2.5e15 },
-  { id:'blackhole',     type:'click', icon:'⚫', name:'Black Hole Bellow',    desc:'+18B honks per click',          baseCost:60e15,  costScale:1.9,  value:18e9,    unlockAt:20e15 },
-  { id:'universe',      type:'click', icon:'🌍', name:'Universe Shatter',     desc:'+80B honks per click',          baseCost:500e15, costScale:1.9,  value:80e9,    unlockAt:180e15 },
-  { id:'omniverse',     type:'click', icon:'🔭', name:'Omniversal Shriek',    desc:'+350B honks per click',         baseCost:4e18,   costScale:1.9,  value:350e9,   unlockAt:1.5e18 },
-  { id:'realityrip',    type:'click', icon:'🌊', name:'Reality Rip',          desc:'+1.5T honks per click',         baseCost:35e18,  costScale:1.9,  value:1.5e12,  unlockAt:12e18 },
-  { id:'timerift',      type:'click', icon:'⏳', name:'Time Rift Honk',       desc:'+7T honks per click',           baseCost:300e18, costScale:1.9,  value:7e12,    unlockAt:100e18 },
-  { id:'voidpulse',     type:'click', icon:'🫧', name:'Void Pulse',           desc:'+30T honks per click',          baseCost:2.5e21, costScale:1.92, value:30e12,   unlockAt:800e18 },
-  { id:'godclick',      type:'click', icon:'👁️', name:'The God Click',        desc:'+150T honks per click',         baseCost:20e21,  costScale:1.92, value:150e12,  unlockAt:7e21 },
-  { id:'infiniteclick', type:'click', icon:'∞',  name:'Infinite Honk',        desc:'+700T honks per click',         baseCost:180e21, costScale:1.95, value:700e12,  unlockAt:60e21 },
-
-  { id:'gosling',       type:'auto',  icon:'🐣', name:'Gosling',              desc:'+0.5 honks/sec',                baseCost:15,     costScale:1.35, value:0.5,     unlockAt:0 },
-  { id:'pond',          type:'auto',  icon:'🏞️', name:'Goose Pond',           desc:'+3 honks/sec',                  baseCost:100,    costScale:1.38, value:3,       unlockAt:30 },
-  { id:'parade',        type:'auto',  icon:'🥁', name:'Goose Parade',         desc:'+12 honks/sec',                 baseCost:600,    costScale:1.4,  value:12,      unlockAt:200 },
-  { id:'migration',     type:'auto',  icon:'✈️', name:'Migration Flock',      desc:'+55 honks/sec',                 baseCost:4000,   costScale:1.42, value:55,      unlockAt:1200 },
-  { id:'farm',          type:'auto',  icon:'🌾', name:'Goose Farm',           desc:'+220 honks/sec',                baseCost:25000,  costScale:1.44, value:220,     unlockAt:8000 },
-  { id:'bakery',        type:'auto',  icon:'🥐', name:'Honk Bakery',          desc:'+700 honks/sec',                baseCost:100000, costScale:1.46, value:700,     unlockAt:40000 },
-  { id:'factory',       type:'auto',  icon:'🏭', name:'Honk Factory',         desc:'+2,500 honks/sec',              baseCost:500000, costScale:1.48, value:2500,    unlockAt:200000 },
-  { id:'lab',           type:'auto',  icon:'🔬', name:'Goose Lab',            desc:'+9,000 honks/sec',              baseCost:3e6,    costScale:1.5,  value:9000,    unlockAt:1.2e6 },
-  { id:'army',          type:'auto',  icon:'⚔️', name:'Goose Army',           desc:'+35,000 honks/sec',             baseCost:20e6,   costScale:1.52, value:35000,   unlockAt:8e6 },
-  { id:'temple',        type:'auto',  icon:'⛩️', name:'Honk Temple',          desc:'+130,000 honks/sec',            baseCost:150e6,  costScale:1.54, value:130000,  unlockAt:60e6 },
-  { id:'orchestra',     type:'auto',  icon:'🎺', name:'Honk Orchestra',       desc:'+500,000 honks/sec',            baseCost:1.2e9,  costScale:1.56, value:500000,  unlockAt:500e6 },
-  { id:'dimension',     type:'auto',  icon:'🌀', name:'Goose Dimension',      desc:'+2M honks/sec',                 baseCost:10e9,   costScale:1.58, value:2e6,     unlockAt:4e9 },
-  { id:'infinite',      type:'auto',  icon:'♾️', name:'Infinite Geese',       desc:'+8M honks/sec',                 baseCost:80e9,   costScale:1.6,  value:8e6,     unlockAt:30e9 },
-  { id:'nebula',        type:'auto',  icon:'🌈', name:'Goose Nebula',         desc:'+32M honks/sec',                baseCost:700e9,  costScale:1.62, value:32e6,    unlockAt:250e9 },
-  { id:'reactor',       type:'auto',  icon:'☢️', name:'Honk Reactor',         desc:'+130M honks/sec',               baseCost:6e12,   costScale:1.64, value:130e6,   unlockAt:2e12 },
-  { id:'singularity',   type:'auto',  icon:'🕳️', name:'Goose Singularity',    desc:'+550M honks/sec',               baseCost:50e12,  costScale:1.65, value:550e6,   unlockAt:18e12 },
-  { id:'uflock',        type:'auto',  icon:'🛸', name:'Universal Flock',      desc:'+2.2B honks/sec',               baseCost:450e12, costScale:1.66, value:2.2e9,   unlockAt:150e12 },
-  { id:'temporal',      type:'auto',  icon:'🕰️', name:'Temporal Migration',   desc:'+9B honks/sec',                 baseCost:4e15,   costScale:1.67, value:9e9,     unlockAt:1.5e15 },
-  { id:'qgaggle',       type:'auto',  icon:'🧬', name:'Quantum Gaggle',       desc:'+38B honks/sec',                baseCost:35e15,  costScale:1.68, value:38e9,    unlockAt:12e15 },
-  { id:'darkmatter',    type:'auto',  icon:'🌑', name:'Dark Matter Geese',    desc:'+160B honks/sec',               baseCost:300e15, costScale:1.69, value:160e9,   unlockAt:100e15 },
-  { id:'cosmicflock',   type:'auto',  icon:'🔆', name:'Cosmic Flock',         desc:'+700B honks/sec',               baseCost:2.5e18, costScale:1.7,  value:700e9,   unlockAt:900e15 },
-  { id:'multiverse',    type:'auto',  icon:'🌐', name:'Multiversal Parade',   desc:'+3T honks/sec',                 baseCost:22e18,  costScale:1.7,  value:3e12,    unlockAt:8e18 },
-  { id:'voidgeese',     type:'auto',  icon:'👻', name:'Void Geese',           desc:'+13T honks/sec',                baseCost:190e18, costScale:1.72, value:13e12,   unlockAt:70e18 },
-  { id:'godgoose',      type:'auto',  icon:'👑', name:'God Goose',            desc:'+55T honks/sec',                baseCost:1.6e21, costScale:1.72, value:55e12,   unlockAt:600e18 },
-  { id:'eternalflock',  type:'auto',  icon:'🌺', name:'The Eternal Flock',    desc:'+250T honks/sec',               baseCost:14e21,  costScale:1.75, value:250e12,  unlockAt:5e21 },
-  { id:'omnihonk',      type:'auto',  icon:'🏆', name:'Omni Honk Engine',     desc:'+1,200T honks/sec',             baseCost:120e21, costScale:1.78, value:1200e12, unlockAt:45e21 },
+  // ── CLICKING POWER ──────────────────────────────────────
+  { id:'louder',        type:'click', icon:'📢', name:'Louder Honk',          desc:'+1 honk/click',        baseCost:50,     costScale:1.5,  value:1,       unlockAt:0       },
+  { id:'brasshorn',     type:'click', icon:'📯', name:'Brass Horn',           desc:'+3 honks/click',       baseCost:250,    costScale:1.52, value:3,       unlockAt:80      },
+  { id:'megaphone',     type:'click', icon:'🔊', name:'Megaphone',            desc:'+10 honks/click',      baseCost:1200,   costScale:1.55, value:10,      unlockAt:500     },
+  { id:'airhorn',       type:'click', icon:'💨', name:'Air Horn',             desc:'+35 honks/click',      baseCost:8000,   costScale:1.58, value:35,      unlockAt:3000    },
+  { id:'foghorn',       type:'click', icon:'🌫️', name:'Foghorn',              desc:'+120 honks/click',     baseCost:50000,  costScale:1.62, value:120,     unlockAt:20000   },
+  { id:'bullhorn',      type:'click', icon:'🗣️', name:'Bull Horn',            desc:'+400 honks/click',     baseCost:220000, costScale:1.65, value:400,     unlockAt:100000  },
+  { id:'honkstorm',     type:'click', icon:'🌪️', name:'HONKSTORM',            desc:'+1,200 honks/click',   baseCost:1e6,    costScale:1.68, value:1200,    unlockAt:500000  },
+  { id:'sonic',         type:'click', icon:'⚡', name:'Sonic Shriek',         desc:'+5,000 honks/click',   baseCost:7e6,    costScale:1.7,  value:5000,    unlockAt:3e6     },
+  { id:'resonance',     type:'click', icon:'🎵', name:'Resonance Wave',       desc:'+18,000 honks/click',  baseCost:50e6,   costScale:1.72, value:18000,   unlockAt:20e6    },
+  { id:'quantum',       type:'click', icon:'🔮', name:'Quantum Honk',         desc:'+65,000 honks/click',  baseCost:400e6,  costScale:1.75, value:65000,   unlockAt:150e6   },
+  { id:'cosmic',        type:'click', icon:'🌌', name:'Cosmic Bellow',        desc:'+250,000 honks/click', baseCost:3e9,    costScale:1.78, value:250000,  unlockAt:1e9     },
+  { id:'goosescream',   type:'click', icon:'😱', name:'Goose Scream',         desc:'+1M honks/click',      baseCost:25e9,   costScale:1.8,  value:1e6,     unlockAt:8e9     },
+  { id:'thunderclap',   type:'click', icon:'⛈️', name:'Thunder Clap',         desc:'+4M honks/click',      baseCost:200e9,  costScale:1.82, value:4e6,     unlockAt:70e9    },
+  { id:'hyperblast',    type:'click', icon:'🚀', name:'Hypersonic Blast',     desc:'+16M honks/click',     baseCost:1.5e12, costScale:1.85, value:16e6,    unlockAt:600e9   },
+  { id:'dimshriek',     type:'click', icon:'🕳️', name:'Dimensional Shriek',   desc:'+65M honks/click',     baseCost:12e12,  costScale:1.87, value:65e6,    unlockAt:5e12    },
+  { id:'galactic',      type:'click', icon:'🌠', name:'Galactic Honk',        desc:'+250M honks/click',    baseCost:100e12, costScale:1.88, value:250e6,   unlockAt:40e12   },
+  { id:'stellar',       type:'click', icon:'💫', name:'Stellar Explosion',    desc:'+1B honks/click',      baseCost:800e12, costScale:1.89, value:1e9,     unlockAt:300e12  },
+  { id:'supernova',     type:'click', icon:'🌟', name:'Supernova Honk',       desc:'+4B honks/click',      baseCost:7e15,   costScale:1.9,  value:4e9,     unlockAt:2.5e15  },
+  { id:'blackhole',     type:'click', icon:'⚫', name:'Black Hole Bellow',    desc:'+18B honks/click',     baseCost:60e15,  costScale:1.9,  value:18e9,    unlockAt:20e15   },
+  { id:'universe',      type:'click', icon:'🌍', name:'Universe Shatter',     desc:'+80B honks/click',     baseCost:500e15, costScale:1.9,  value:80e9,    unlockAt:180e15  },
+  { id:'omniverse',     type:'click', icon:'🔭', name:'Omniversal Shriek',    desc:'+350B honks/click',    baseCost:4e18,   costScale:1.9,  value:350e9,   unlockAt:1.5e18  },
+  { id:'realityrip',    type:'click', icon:'🌊', name:'Reality Rip',          desc:'+1.5T honks/click',    baseCost:35e18,  costScale:1.9,  value:1.5e12,  unlockAt:12e18   },
+  { id:'timerift',      type:'click', icon:'⏳', name:'Time Rift Honk',       desc:'+7T honks/click',      baseCost:300e18, costScale:1.9,  value:7e12,    unlockAt:100e18  },
+  { id:'voidpulse',     type:'click', icon:'🫧', name:'Void Pulse',           desc:'+30T honks/click',     baseCost:2.5e21, costScale:1.92, value:30e12,   unlockAt:800e18  },
+  { id:'godclick',      type:'click', icon:'👁️', name:'The God Click',        desc:'+150T honks/click',    baseCost:20e21,  costScale:1.92, value:150e12,  unlockAt:7e21    },
+  { id:'infiniteclick', type:'click', icon:'∞',  name:'Infinite Honk',        desc:'+700T honks/click',    baseCost:180e21, costScale:1.95, value:700e12,  unlockAt:60e21   },
+  // ── HONKS PER SECOND ────────────────────────────────────
+  { id:'gosling',       type:'auto',  icon:'🐣', name:'Gosling',              desc:'+0.5 honks/sec',       baseCost:15,     costScale:1.35, value:0.5,     unlockAt:0       },
+  { id:'pond',          type:'auto',  icon:'🏞️', name:'Goose Pond',           desc:'+3 honks/sec',         baseCost:100,    costScale:1.38, value:3,       unlockAt:30      },
+  { id:'parade',        type:'auto',  icon:'🥁', name:'Goose Parade',         desc:'+12 honks/sec',        baseCost:600,    costScale:1.4,  value:12,      unlockAt:200     },
+  { id:'migration',     type:'auto',  icon:'✈️', name:'Migration Flock',      desc:'+55 honks/sec',        baseCost:4000,   costScale:1.42, value:55,      unlockAt:1200    },
+  { id:'farm',          type:'auto',  icon:'🌾', name:'Goose Farm',           desc:'+220 honks/sec',       baseCost:25000,  costScale:1.44, value:220,     unlockAt:8000    },
+  { id:'bakery',        type:'auto',  icon:'🥐', name:'Honk Bakery',          desc:'+700 honks/sec',       baseCost:100000, costScale:1.46, value:700,     unlockAt:40000   },
+  { id:'factory',       type:'auto',  icon:'🏭', name:'Honk Factory',         desc:'+2,500 honks/sec',     baseCost:500000, costScale:1.48, value:2500,    unlockAt:200000  },
+  { id:'lab',           type:'auto',  icon:'🔬', name:'Goose Lab',            desc:'+9,000 honks/sec',     baseCost:3e6,    costScale:1.5,  value:9000,    unlockAt:1.2e6   },
+  { id:'army',          type:'auto',  icon:'⚔️', name:'Goose Army',           desc:'+35,000 honks/sec',    baseCost:20e6,   costScale:1.52, value:35000,   unlockAt:8e6     },
+  { id:'temple',        type:'auto',  icon:'⛩️', name:'Honk Temple',          desc:'+130,000 honks/sec',   baseCost:150e6,  costScale:1.54, value:130000,  unlockAt:60e6    },
+  { id:'orchestra',     type:'auto',  icon:'🎺', name:'Honk Orchestra',       desc:'+500,000 honks/sec',   baseCost:1.2e9,  costScale:1.56, value:500000,  unlockAt:500e6   },
+  { id:'dimension',     type:'auto',  icon:'🌀', name:'Goose Dimension',      desc:'+2M honks/sec',        baseCost:10e9,   costScale:1.58, value:2e6,     unlockAt:4e9     },
+  { id:'infinite',      type:'auto',  icon:'♾️', name:'Infinite Geese',       desc:'+8M honks/sec',        baseCost:80e9,   costScale:1.6,  value:8e6,     unlockAt:30e9    },
+  { id:'nebula',        type:'auto',  icon:'🌈', name:'Goose Nebula',         desc:'+32M honks/sec',       baseCost:700e9,  costScale:1.62, value:32e6,    unlockAt:250e9   },
+  { id:'reactor',       type:'auto',  icon:'☢️', name:'Honk Reactor',         desc:'+130M honks/sec',      baseCost:6e12,   costScale:1.64, value:130e6,   unlockAt:2e12    },
+  { id:'singularity',   type:'auto',  icon:'🕳️', name:'Goose Singularity',    desc:'+550M honks/sec',      baseCost:50e12,  costScale:1.65, value:550e6,   unlockAt:18e12   },
+  { id:'uflock',        type:'auto',  icon:'🛸', name:'Universal Flock',      desc:'+2.2B honks/sec',      baseCost:450e12, costScale:1.66, value:2.2e9,   unlockAt:150e12  },
+  { id:'temporal',      type:'auto',  icon:'🕰️', name:'Temporal Migration',   desc:'+9B honks/sec',        baseCost:4e15,   costScale:1.67, value:9e9,     unlockAt:1.5e15  },
+  { id:'qgaggle',       type:'auto',  icon:'🧬', name:'Quantum Gaggle',       desc:'+38B honks/sec',       baseCost:35e15,  costScale:1.68, value:38e9,    unlockAt:12e15   },
+  { id:'darkmatter',    type:'auto',  icon:'🌑', name:'Dark Matter Geese',    desc:'+160B honks/sec',      baseCost:300e15, costScale:1.69, value:160e9,   unlockAt:100e15  },
+  { id:'cosmicflock',   type:'auto',  icon:'🔆', name:'Cosmic Flock',         desc:'+700B honks/sec',      baseCost:2.5e18, costScale:1.7,  value:700e9,   unlockAt:900e15  },
+  { id:'multiverse',    type:'auto',  icon:'🌐', name:'Multiversal Parade',   desc:'+3T honks/sec',        baseCost:22e18,  costScale:1.7,  value:3e12,    unlockAt:8e18    },
+  { id:'voidgeese',     type:'auto',  icon:'👻', name:'Void Geese',           desc:'+13T honks/sec',       baseCost:190e18, costScale:1.72, value:13e12,   unlockAt:70e18   },
+  { id:'godgoose',      type:'auto',  icon:'👑', name:'God Goose',            desc:'+55T honks/sec',       baseCost:1.6e21, costScale:1.72, value:55e12,   unlockAt:600e18  },
+  { id:'eternalflock',  type:'auto',  icon:'🌺', name:'The Eternal Flock',    desc:'+250T honks/sec',      baseCost:14e21,  costScale:1.75, value:250e12,  unlockAt:5e21    },
+  { id:'omnihonk',      type:'auto',  icon:'🏆', name:'Omni Honk Engine',     desc:'+1,200T honks/sec',    baseCost:120e21, costScale:1.78, value:1200e12, unlockAt:45e21   },
 ];
 
-// ── STATE ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// MILESTONES
+// ══════════════════════════════════════════════════════════
+const MILESTONES = [
+  { count:10,  mult:2  },
+  { count:25,  mult:4  },
+  { count:50,  mult:8  },
+  { count:100, mult:16 },
+  { count:200, mult:32 },
+];
+function getMilestoneMult(count) {
+  let m = 1;
+  for (const ms of MILESTONES) if (count >= ms.count) m = ms.mult;
+  return m;
+}
+function nextMilestone(count) { return MILESTONES.find(ms => count < ms.count) || null; }
+
+// ══════════════════════════════════════════════════════════
+// PRESTIGE PERKS
+// ══════════════════════════════════════════════════════════
+const PERKS = [
+  { id:'headstart',   icon:'🚀', name:'Head Start',     maxLevel:5, costPerLevel:1, desc:'Start each run with 10 free Goslings per level.' },
+  { id:'autoclicker', icon:'🤖', name:'Auto Clicker',   maxLevel:5, costPerLevel:2, desc:'Auto-clicks the goose 1× per second per level.' },
+  { id:'offlinepct',  icon:'🌙', name:'Night Owl',      maxLevel:5, costPerLevel:1, desc:'+20% offline production efficiency per level.' },
+  { id:'clickboost',  icon:'👆', name:'Heavy Hoof',     maxLevel:5, costPerLevel:2, desc:'Click upgrades are 25% more effective per level.' },
+  { id:'autoboost',   icon:'🐣', name:'Gaggle Growth',  maxLevel:5, costPerLevel:2, desc:'Auto producers are 25% more effective per level.' },
+  { id:'cheapupgr',   icon:'💸', name:'Bargain Honker', maxLevel:3, costPerLevel:3, desc:'All upgrade costs reduced by 10% per level.' },
+];
+function getPerkLevel(id) { return perkLevels[id] || 0; }
+function getPerkCost(perk) { return perk.costPerLevel * (getPerkLevel(perk.id) + 1); }
+function freeFeathers() { return state.rebirthCount - state.feathersSpent; }
+
+// ══════════════════════════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════════════════════════
+const ACHIEVEMENTS = [
+  { id:'firstclick',  icon:'👆', name:'First Honk',        desc:'Click the goose for the first time.',          check:() => state.totalClicks >= 1 },
+  { id:'click100',    icon:'👆', name:'Clicker',           desc:'Click 100 times.',                             check:() => state.totalClicks >= 100 },
+  { id:'click1k',     icon:'👆', name:'Dedicated Honker',  desc:'Click 1,000 times.',                           check:() => state.totalClicks >= 1000 },
+  { id:'click10k',    icon:'👆', name:'Hand Cramp',        desc:'Click 10,000 times.',                          check:() => state.totalClicks >= 10000 },
+  { id:'click100k',   icon:'👆', name:'Repetitive Strain', desc:'Click 100,000 times.',                         check:() => state.totalClicks >= 100000 },
+  { id:'honk1k',      icon:'🪿', name:'Baby Goose',        desc:'Earn 1,000 total honks.',                      check:() => state.grandTotalHonks >= 1000 },
+  { id:'honk1m',      icon:'🪿', name:'Honk Millionaire',  desc:'Earn 1 million total honks.',                  check:() => state.grandTotalHonks >= 1e6 },
+  { id:'honk1b',      icon:'🪿', name:'Honk Billionaire',  desc:'Earn 1 billion total honks.',                  check:() => state.grandTotalHonks >= 1e9 },
+  { id:'honk1t',      icon:'🪿', name:'Honk Trillionaire', desc:'Earn 1 trillion total honks.',                 check:() => state.grandTotalHonks >= 1e12 },
+  { id:'honk1qa',     icon:'🪿', name:'Beyond Counting',   desc:'Earn 1 quadrillion total honks.',              check:() => state.grandTotalHonks >= 1e15 },
+  { id:'upg1',        icon:'⬆️', name:'First Upgrade',     desc:'Buy your first upgrade.',                      check:() => state.totalUpgradesBought >= 1 },
+  { id:'upg50',       icon:'⬆️', name:'Upgrade Hoarder',   desc:'Buy 50 upgrades total.',                       check:() => state.totalUpgradesBought >= 50 },
+  { id:'upg200',      icon:'⬆️', name:'Upgrade Addict',    desc:'Buy 200 upgrades total.',                      check:() => state.totalUpgradesBought >= 200 },
+  { id:'milestone1',  icon:'🎯', name:'Milestone Hunter',  desc:'Hit a ×2 milestone on any upgrade.',           check:() => UPGRADE_DEFS.some(u => getCount(u.id) >= 10) },
+  { id:'milestone2',  icon:'🎯', name:'Stack Master',      desc:'Own 50 of any single upgrade.',                check:() => UPGRADE_DEFS.some(u => getCount(u.id) >= 50) },
+  { id:'rebirth1',    icon:'🪶', name:'Reborn',            desc:'Rebirth for the first time.',                  check:() => state.rebirthCount >= 1 },
+  { id:'rebirth3',    icon:'🪶', name:'Phoenix Goose',     desc:'Rebirth 3 times.',                             check:() => state.rebirthCount >= 3 },
+  { id:'rebirth10',   icon:'🪶', name:'Eternal Honker',    desc:'Rebirth 10 times.',                            check:() => state.rebirthCount >= 10 },
+  { id:'firstperk',   icon:'✨', name:'Power Up',          desc:'Spend your first Golden Feather on a perk.',   check:() => state.feathersSpent >= 1 },
+  { id:'perk5',       icon:'✨', name:'Perk Collector',    desc:'Spend 5 feathers on perks.',                   check:() => state.feathersSpent >= 5 },
+  { id:'hps1k',       icon:'⚙️', name:'Passive Goose',     desc:'Reach 1,000 honks per second.',               check:() => state.honksPerSec >= 1000 },
+  { id:'hps1m',       icon:'⚙️', name:'Honk Machine',      desc:'Reach 1 million honks per second.',            check:() => state.honksPerSec >= 1e6 },
+  { id:'hps1b',       icon:'⚙️', name:'Honk Reactor',      desc:'Reach 1 billion honks per second.',            check:() => state.honksPerSec >= 1e9 },
+];
+
+// ══════════════════════════════════════════════════════════
+// STATE  (plain values only — no methods)
+// ══════════════════════════════════════════════════════════
 const state = {
   honks: 0,
   allTimeHonks: 0,
@@ -603,33 +788,41 @@ const state = {
   honksPerClick: 1,
   honksPerSec: 0,
   rebirthCount: 0,
+  feathersSpent: 0,
+  totalUpgradesBought: 0,
+  highestHonks: 0,
   darkMode: false,
+  sessionStart: Date.now(),
+  totalPlayTime: 0,
+  lastSaveTime: Date.now(),
 };
 
-// Runtime upgrade counts — separate so we can save/load cleanly
-const upgradeCounts = {};
+// Mutable counts — separate from immutable defs (Doc2 architecture)
+const upgradeCounts   = {};
 UPGRADE_DEFS.forEach(u => { upgradeCounts[u.id] = 0; });
+const perkLevels      = {};
+let achievementsUnlocked = [];
+let bulkAmount = 1;
 
-// ── SAVE / LOAD ──────────────────────────────────────────
-const SAVE_KEY = 'goose-clicker-save';
-let saveIndicatorTimer = null;
+// ══════════════════════════════════════════════════════════
+// SAVE / LOAD
+// ══════════════════════════════════════════════════════════
+const SAVE_KEY = 'goose-clicker-v3';
+let _saveIndicatorTimer = null;
 
 function saveGame() {
-  const saveData = {
-    honks: state.honks,
-    allTimeHonks: state.allTimeHonks,
-    grandTotalHonks: state.grandTotalHonks,
-    totalClicks: state.totalClicks,
-    rebirthCount: state.rebirthCount,
-    darkMode: state.darkMode,
+  const data = {
+    state: { ...state },
     upgradeCounts: { ...upgradeCounts },
+    perkLevels:    { ...perkLevels },
+    achievementsUnlocked: [...achievementsUnlocked],
+    v: 3,
   };
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
-    flashSaveIndicator('💾 Saved!');
-  } catch (e) {
-    flashSaveIndicator('⚠️ Save failed');
-  }
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    state.lastSaveTime = Date.now();
+    flashSave('💾 Saved!');
+  } catch(e) { flashSave('⚠️ Save failed'); }
 }
 
 function loadGame() {
@@ -637,106 +830,159 @@ function loadGame() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return false;
     const d = JSON.parse(raw);
-    state.honks           = d.honks           ?? 0;
-    state.allTimeHonks    = d.allTimeHonks    ?? 0;
-    state.grandTotalHonks = d.grandTotalHonks ?? 0;
-    state.totalClicks     = d.totalClicks     ?? 0;
-    state.rebirthCount    = d.rebirthCount    ?? 0;
-    state.darkMode        = d.darkMode        ?? false;
-    if (d.upgradeCounts) {
-      Object.keys(d.upgradeCounts).forEach(id => {
-        if (id in upgradeCounts) upgradeCounts[id] = d.upgradeCounts[id] ?? 0;
-      });
-    }
+    if (!d || !d.state) return false;
+    Object.assign(state, d.state);
+    if (d.upgradeCounts) Object.keys(d.upgradeCounts).forEach(id => {
+      if (id in upgradeCounts) upgradeCounts[id] = d.upgradeCounts[id] || 0;
+    });
+    if (d.perkLevels) Object.assign(perkLevels, d.perkLevels);
+    if (d.achievementsUnlocked) achievementsUnlocked = d.achievementsUnlocked;
     return true;
-  } catch (e) {
-    return false;
-  }
+  } catch(e) { return false; }
 }
 
-function deleteGame() {
-  try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
-}
-
-function flashSaveIndicator(msg) {
+function flashSave(msg) {
   const el = document.getElementById('saveIndicator');
   el.textContent = msg;
   el.classList.add('flash');
-  clearTimeout(saveIndicatorTimer);
-  saveIndicatorTimer = setTimeout(() => {
+  clearTimeout(_saveIndicatorTimer);
+  _saveIndicatorTimer = setTimeout(() => {
     el.textContent = '💾 Autosave on';
     el.classList.remove('flash');
   }, 2000);
 }
 
-// Autosave every 10 seconds
 setInterval(saveGame, 10000);
 
-// ── HELPERS ──────────────────────────────────────────────
-function getUpgCount(id) { return upgradeCounts[id] ?? 0; }
-function getCost(upg) {
-  return Math.ceil(upg.baseCost * Math.pow(upg.costScale, getUpgCount(upg.id)));
+// ══════════════════════════════════════════════════════════
+// OFFLINE PROGRESS
+// ══════════════════════════════════════════════════════════
+function checkOfflineProgress() {
+  const elapsed = (Date.now() - (state.lastSaveTime || Date.now())) / 1000;
+  if (elapsed < 60 || state.honksPerSec <= 0) return;
+  const offlinePct = Math.min(1, 0.5 + getPerkLevel('offlinepct') * 0.2);
+  const gained = state.honksPerSec * elapsed * offlinePct;
+  state.honks += gained;
+  state.allTimeHonks += gained;
+  state.grandTotalHonks += gained;
+  const mins = Math.floor(elapsed / 60), hrs = Math.floor(mins / 60);
+  const timeStr = hrs > 0 ? `${hrs}h ${mins % 60}m` : `${mins}m`;
+  document.getElementById('offlineText').innerHTML =
+    `Away for <strong>${timeStr}</strong>. Your geese earned <strong>${formatNum(gained)}</strong> honks!
+     <br><small>(${Math.round(offlinePct * 100)}% offline efficiency)</small>`;
+  document.getElementById('offlineModal').classList.remove('hidden');
 }
+document.getElementById('offlineOk').addEventListener('click', () =>
+  document.getElementById('offlineModal').classList.add('hidden'));
+
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+function getCount(id) { return upgradeCounts[id] || 0; }
+
+function getCost(upg, fromCount) {
+  const c = fromCount !== undefined ? fromCount : getCount(upg.id);
+  const cheapMult = 1 - getPerkLevel('cheapupgr') * 0.1;
+  return Math.ceil(upg.baseCost * Math.pow(upg.costScale, c) * cheapMult);
+}
+function getBulkCost(upg, n) {
+  const cheapMult = 1 - getPerkLevel('cheapupgr') * 0.1;
+  let total = 0;
+  for (let i = 0; i < n; i++)
+    total += Math.ceil(upg.baseCost * Math.pow(upg.costScale, getCount(upg.id) + i) * cheapMult);
+  return total;
+}
+function getMaxAffordable(upg) {
+  let total = 0, n = 0;
+  while (true) {
+    const next = getCost(upg, getCount(upg.id) + n);
+    if (total + next > state.honks || n > 10000) break;
+    total += next; n++;
+  }
+  return n;
+}
+function getBulkN(upg) {
+  return bulkAmount === 'max' ? Math.max(1, getMaxAffordable(upg)) : bulkAmount;
+}
+
 function rebirthCost() { return 1e6 * Math.pow(10, state.rebirthCount); }
 function rebirthMult() { return 1 + state.rebirthCount * 0.5; }
 
 function recalcStats() {
-  const mult = rebirthMult();
+  const rm         = rebirthMult();
+  const clickBoost = 1 + getPerkLevel('clickboost') * 0.25;
+  const autoBoost  = 1 + getPerkLevel('autoboost')  * 0.25;
   state.honksPerClick = (1 + UPGRADE_DEFS
     .filter(u => u.type === 'click')
-    .reduce((s, u) => s + u.value * getUpgCount(u.id), 0)) * mult;
+    .reduce((s, u) => s + u.value * getCount(u.id) * getMilestoneMult(getCount(u.id)), 0) * clickBoost) * rm;
   state.honksPerSec = UPGRADE_DEFS
     .filter(u => u.type === 'auto')
-    .reduce((s, u) => s + u.value * getUpgCount(u.id), 0) * mult;
+    .reduce((s, u) => s + u.value * getCount(u.id) * getMilestoneMult(getCount(u.id)), 0) * autoBoost * rm;
 }
 
 function formatNum(n) {
-  if (n >= 1e21) return (n / 1e21).toFixed(2) + ' Sx';
-  if (n >= 1e18) return (n / 1e18).toFixed(2) + ' Qi';
-  if (n >= 1e15) return (n / 1e15).toFixed(2) + ' Qa';
-  if (n >= 1e12) return (n / 1e12).toFixed(2) + ' T';
-  if (n >= 1e9)  return (n / 1e9).toFixed(2)  + ' B';
-  if (n >= 1e6)  return (n / 1e6).toFixed(2)  + ' M';
-  if (n >= 1e3)  return (n / 1e3).toFixed(1)  + 'K';
+  if (n >= 1e21) return (n/1e21).toFixed(2)+' Sx';
+  if (n >= 1e18) return (n/1e18).toFixed(2)+' Qi';
+  if (n >= 1e15) return (n/1e15).toFixed(2)+' Qa';
+  if (n >= 1e12) return (n/1e12).toFixed(2)+' T';
+  if (n >= 1e9)  return (n/1e9).toFixed(2)+' B';
+  if (n >= 1e6)  return (n/1e6).toFixed(2)+' M';
+  if (n >= 1e3)  return (n/1e3).toFixed(1)+'K';
   return Math.floor(n).toString();
 }
+function formatTime(ms) {
+  const s = Math.floor(ms/1000), m = Math.floor(s/60), h = Math.floor(m/60);
+  if (h > 0) return `${h}h ${m%60}m`;
+  if (m > 0) return `${m}m ${s%60}s`;
+  return `${s}s`;
+}
 
-// ── RENDER ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════
 let _lastVisibleIds = '';
 
 function updateDisplay() {
   document.getElementById('honkDisplay').textContent = formatNum(Math.floor(state.honks)) + ' HONKS';
-  document.getElementById('hpsDisplay').textContent  = formatNum(state.honksPerSec) + ' honks / sec';
-  document.getElementById('totalClicks').textContent = formatNum(state.totalClicks);
-  document.getElementById('allTimeHonks').textContent= formatNum(Math.floor(state.grandTotalHonks));
+  document.getElementById('hpsDisplay').textContent  =
+    formatNum(state.honksPerSec) + ' / sec  ·  ' + formatNum(state.honksPerClick) + ' / click';
+  document.getElementById('totalClicks').textContent  = formatNum(state.totalClicks);
+  document.getElementById('allTimeHonks').textContent = formatNum(Math.floor(state.grandTotalHonks));
 
-  const cost  = rebirthCost();
-  const ready = state.allTimeHonks >= cost;
+  // rebirth bar
+  const cost = rebirthCost(), ready = state.allTimeHonks >= cost;
   document.getElementById('rebirthFeathers').textContent = '🪶 Golden Feathers: ' + state.rebirthCount;
   document.getElementById('rebirthBonus').innerHTML = state.rebirthCount > 0
-    ? `All production: <strong>×${rebirthMult().toFixed(1)}</strong>`
-    : 'No bonus yet';
+    ? `All production: <strong>×${rebirthMult().toFixed(1)}</strong>` : 'No bonus yet';
   document.getElementById('rebirthReq').textContent = ready
-    ? '✅ Ready to rebirth!'
-    : `Need ${formatNum(cost)} honks this run`;
+    ? '✅ Ready to rebirth!' : `Need ${formatNum(cost)} honks this run`;
   const btn = document.getElementById('rebirthBtn');
   btn.classList.toggle('ready', ready);
   btn.classList.toggle('dim', !ready);
 
+  // rebuild upgrade list only when visibility changes
   const visibleIds = UPGRADE_DEFS
-    .filter(u => state.allTimeHonks >= u.unlockAt)
-    .map(u => u.id).join(',');
+    .filter(u => state.allTimeHonks >= u.unlockAt).map(u => u.id).join(',');
   if (visibleIds !== _lastVisibleIds) {
     _lastVisibleIds = visibleIds;
     renderUpgrades();
     return;
   }
 
+  // lightweight affordability update
   document.querySelectorAll('.upgrade-card').forEach(card => {
     const upg = UPGRADE_DEFS.find(u => u.id === card.dataset.upgId);
     if (!upg) return;
-    card.classList.toggle('locked', state.honks < getCost(upg));
+    const n = getBulkN(upg), costN = getBulkCost(upg, n);
+    card.classList.toggle('locked', n <= 0 || costN > state.honks);
+    const ce = card.querySelector('.upg-cost');
+    if (ce) ce.textContent = '🪙 ' + formatNum(getCost(upg));
+    const be = card.querySelector('.upg-bulk-cost');
+    if (be) be.textContent = bulkAmount !== 1 && n > 0 ? `×${n}: 🪙${formatNum(costN)}` : '';
   });
+
+  if (state.honks > state.highestHonks) state.highestHonks = state.honks;
+  checkAchievements();
 }
 
 function renderUpgrades() {
@@ -747,25 +993,39 @@ function renderUpgrades() {
     .forEach(({ type, label }) => {
       const visible = UPGRADE_DEFS.filter(u => u.type === type && state.allTimeHonks >= u.unlockAt);
       if (!visible.length) return;
-      const header = document.createElement('div');
-      header.className = 'cat-header';
-      header.textContent = label;
-      list.appendChild(header);
+      const hdr = document.createElement('div');
+      hdr.className = 'cat-header';
+      hdr.textContent = label;
+      list.appendChild(hdr);
 
       visible.forEach(upg => {
-        const cost = getCost(upg);
-        const cnt  = getUpgCount(upg.id);
+        const cnt   = getCount(upg.id);
+        const n     = getBulkN(upg);
+        const cost1 = getCost(upg);
+        const costN = getBulkCost(upg, n);
+        const can   = n > 0 && costN <= state.honks;
+        const ms    = getMilestoneMult(cnt);
+        const nextMs = nextMilestone(cnt);
+
         const card = document.createElement('div');
-        card.className = 'upgrade-card' + (state.honks >= cost ? '' : ' locked');
+        card.className = 'upgrade-card' + (can ? '' : ' locked') + (ms > 1 ? ' milestone-glow' : '');
         card.dataset.upgId = upg.id;
+
+        let msHtml = '';
+        if (ms > 1) msHtml = `<div class="upg-milestone">⭐ ×${ms} milestone active!</div>`;
+        else if (nextMs) msHtml = `<div class="upg-milestone">Next milestone: ${nextMs.count} owned (×${nextMs.mult})</div>`;
+
         card.innerHTML = `
           <div class="upg-icon">${upg.icon}</div>
           <div class="upg-info">
             <div class="upg-name">${upg.name}${cnt > 0 ? `<span class="upg-count">${cnt}</span>` : ''}</div>
             <div class="upg-desc">${upg.desc}</div>
+            ${msHtml}
           </div>
-          <div class="upg-cost">🪙 ${formatNum(cost)}</div>
-        `;
+          <div class="upg-right">
+            <div class="upg-cost">🪙 ${formatNum(cost1)}</div>
+            <div class="upg-bulk-cost">${bulkAmount !== 1 && n > 0 ? `×${n}: 🪙${formatNum(costN)}` : ''}</div>
+          </div>`;
         card.addEventListener('click', () => buyUpgrade(upg));
         list.appendChild(card);
       });
@@ -775,40 +1035,54 @@ function renderUpgrades() {
     .filter(u => state.allTimeHonks < u.unlockAt)
     .sort((a, b) => a.unlockAt - b.unlockAt)[0];
   if (nextHidden) {
-    const teaser = document.createElement('div');
-    teaser.className = 'teaser';
-    teaser.innerHTML = `<span>???</span> Earn <strong>${formatNum(nextHidden.unlockAt)}</strong> total honks to unlock something new…`;
-    list.appendChild(teaser);
+    const t = document.createElement('div');
+    t.className = 'teaser';
+    t.innerHTML = `<span>???</span> Earn <strong>${formatNum(nextHidden.unlockAt)}</strong> total honks to unlock something new…`;
+    list.appendChild(t);
   }
 }
 
-// ── BUY UPGRADE ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// BUY UPGRADE
+// ══════════════════════════════════════════════════════════
 function buyUpgrade(upg) {
-  const cost = getCost(upg);
+  const n = getBulkN(upg);
+  if (n <= 0) return;
+  const cost = getBulkCost(upg, n);
   if (state.honks < cost) return;
   state.honks -= cost;
-  upgradeCounts[upg.id]++;
+  upgradeCounts[upg.id] += n;
+  state.totalUpgradesBought += n;
   recalcStats();
   renderUpgrades();
   updateDisplay();
 }
 
-// ── CLICK HANDLER ─────────────────────────────────────────
-const gooseBtn = document.getElementById('gooseBtn');
-gooseBtn.addEventListener('click', (e) => {
+// ══════════════════════════════════════════════════════════
+// CLICK HANDLER
+// ══════════════════════════════════════════════════════════
+document.getElementById('gooseBtn').addEventListener('click', (e) => {
   const gained = state.honksPerClick;
-  state.honks += gained;
-  state.allTimeHonks += gained;
-  state.grandTotalHonks += gained;
+  state.honks += gained; state.allTimeHonks += gained; state.grandTotalHonks += gained;
   state.totalClicks++;
-  gooseBtn.classList.remove('honked');
-  void gooseBtn.offsetWidth;
-  gooseBtn.classList.add('honked');
+  const btn = document.getElementById('gooseBtn');
+  btn.classList.remove('honked'); void btn.offsetWidth; btn.classList.add('honked');
   spawnParticle(e.clientX, e.clientY, '+' + formatNum(Math.round(gained)));
   updateDisplay();
 });
 
-// ── PARTICLES ─────────────────────────────────────────────
+// Auto-clicker perk
+setInterval(() => {
+  const lvl = getPerkLevel('autoclicker');
+  if (lvl <= 0) return;
+  const gained = state.honksPerClick * lvl;
+  state.honks += gained; state.allTimeHonks += gained; state.grandTotalHonks += gained;
+  state.totalClicks += lvl;
+}, 1000);
+
+// ══════════════════════════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════════════════════════
 function spawnParticle(x, y, text) {
   const el = document.createElement('div');
   el.className = 'particle';
@@ -819,96 +1093,266 @@ function spawnParticle(x, y, text) {
   setTimeout(() => el.remove(), 900);
 }
 
-// ── AUTO-TICK ─────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// AUTO-TICK
+// ══════════════════════════════════════════════════════════
 let lastTick = performance.now();
 function tick(now) {
   const dt = (now - lastTick) / 1000;
   lastTick = now;
   if (state.honksPerSec > 0) {
     const gained = state.honksPerSec * dt;
-    state.honks += gained;
-    state.allTimeHonks += gained;
-    state.grandTotalHonks += gained;
+    state.honks += gained; state.allTimeHonks += gained; state.grandTotalHonks += gained;
     updateDisplay();
   }
+  state.totalPlayTime += dt * 1000;
   requestAnimationFrame(tick);
 }
 
-// ── REBIRTH ───────────────────────────────────────────────
-const rebirthModal = document.getElementById('rebirthModal');
+// ══════════════════════════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════════════════════════
+let _toastTimer = null;
+function checkAchievements() {
+  ACHIEVEMENTS.forEach(ach => {
+    if (achievementsUnlocked.includes(ach.id)) return;
+    if (ach.check()) {
+      achievementsUnlocked.push(ach.id);
+      showToast(ach);
+      if (document.getElementById('tab-achievements').classList.contains('active')) renderAchievements();
+    }
+  });
+}
+
+function showToast(ach) {
+  document.getElementById('achToastIcon').textContent = ach.icon;
+  document.getElementById('achToastName').textContent = ach.name;
+  const toast = document.getElementById('achToast');
+  toast.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function renderAchievements() {
+  const list = document.getElementById('achList');
+  list.innerHTML = '';
+  document.getElementById('achProgress').textContent =
+    `${achievementsUnlocked.length} / ${ACHIEVEMENTS.length} achievements unlocked`;
+
+  const groups = [
+    { label:'👆 Clicking',   ids:['firstclick','click100','click1k','click10k','click100k'] },
+    { label:'🪿 Honking',    ids:['honk1k','honk1m','honk1b','honk1t','honk1qa'] },
+    { label:'⬆️ Upgrades',   ids:['upg1','upg50','upg200','milestone1','milestone2'] },
+    { label:'🪶 Rebirth',    ids:['rebirth1','rebirth3','rebirth10'] },
+    { label:'✨ Perks',      ids:['firstperk','perk5'] },
+    { label:'⚙️ Production', ids:['hps1k','hps1m','hps1b'] },
+  ];
+  groups.forEach(g => {
+    const title = document.createElement('div');
+    title.className = 'ach-section-title'; title.textContent = g.label;
+    list.appendChild(title);
+    const grid = document.createElement('div'); grid.className = 'ach-grid';
+    g.ids.forEach(id => {
+      const ach = ACHIEVEMENTS.find(a => a.id === id); if (!ach) return;
+      const unlocked = achievementsUnlocked.includes(ach.id);
+      const card = document.createElement('div');
+      card.className = 'ach-card ' + (unlocked ? 'unlocked' : 'locked');
+      card.innerHTML = `
+        <div class="ach-icon">${unlocked ? ach.icon : '❓'}</div>
+        <div>
+          <div class="ach-name">${unlocked ? ach.name : '???'}</div>
+          <div class="ach-desc">${unlocked ? ach.desc : 'Keep playing to unlock.'}</div>
+        </div>`;
+      grid.appendChild(card);
+    });
+    list.appendChild(grid);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// PERKS
+// ══════════════════════════════════════════════════════════
+function renderPerks() {
+  const free = freeFeathers();
+  document.getElementById('featherBalance').textContent =
+    `🪶 ${free} Golden Feather${free !== 1 ? 's' : ''} available`;
+  const grid = document.getElementById('perksList'); grid.innerHTML = '';
+  PERKS.forEach(perk => {
+    const level = getPerkLevel(perk.id), maxed = level >= perk.maxLevel;
+    const cost = getPerkCost(perk), canBuy = !maxed && free >= cost;
+    const card = document.createElement('div');
+    card.className = 'perk-card' + (maxed ? ' maxed' : canBuy ? '' : ' locked');
+    card.innerHTML = `
+      <div class="perk-icon">${perk.icon}</div>
+      <div class="perk-name">${perk.name}</div>
+      <div class="perk-desc">${perk.desc}</div>
+      <div class="perk-level">${maxed ? '✅ MAX' : `Level ${level} / ${perk.maxLevel}`}</div>
+      <div class="perk-cost ${canBuy ? 'can-afford' : ''}">${maxed ? '' : `🪶 ${cost} feather${cost !== 1 ? 's' : ''}`}</div>`;
+    if (!maxed) card.addEventListener('click', () => buyPerk(perk));
+    grid.appendChild(card);
+  });
+}
+
+function buyPerk(perk) {
+  const cost = getPerkCost(perk);
+  if (freeFeathers() < cost || getPerkLevel(perk.id) >= perk.maxLevel) return;
+  state.feathersSpent += cost;
+  perkLevels[perk.id] = (perkLevels[perk.id] || 0) + 1;
+  if (perk.id === 'headstart') {
+    upgradeCounts['gosling'] = (upgradeCounts['gosling'] || 0) + 10;
+    state.totalUpgradesBought += 10;
+  }
+  recalcStats(); renderPerks(); updateDisplay(); checkAchievements();
+  spawnParticle(window.innerWidth / 2, window.innerHeight / 2, `✨ ${perk.name}!`);
+}
+
+// ══════════════════════════════════════════════════════════
+// STATS
+// ══════════════════════════════════════════════════════════
+function renderStats() {
+  const items = [
+    { icon:'🪿', label:'Grand Total Honks',  value: formatNum(Math.floor(state.grandTotalHonks)) },
+    { icon:'⚙️', label:'Honks Per Second',    value: formatNum(state.honksPerSec) },
+    { icon:'👆', label:'Honks Per Click',     value: formatNum(state.honksPerClick) },
+    { icon:'🖱️', label:'Total Clicks',        value: formatNum(state.totalClicks) },
+    { icon:'⬆️', label:'Upgrades Purchased',  value: formatNum(state.totalUpgradesBought) },
+    { icon:'🪶', label:'Rebirths',            value: state.rebirthCount },
+    { icon:'✨', label:'Feathers Spent',      value: state.feathersSpent },
+    { icon:'🏆', label:'Achievements',        value: `${achievementsUnlocked.length} / ${ACHIEVEMENTS.length}` },
+    { icon:'💰', label:'Highest Honks Held',  value: formatNum(Math.floor(state.highestHonks)) },
+    { icon:'⏱️', label:'This Session',        value: formatTime(Date.now() - state.sessionStart) },
+    { icon:'🕹️', label:'Total Play Time',     value: formatTime(state.totalPlayTime) },
+    { icon:'🔁', label:'Rebirth Multiplier',  value: `×${rebirthMult().toFixed(1)}` },
+  ];
+  document.getElementById('statsFull').innerHTML = items.map(i => `
+    <div class="stat-card">
+      <div class="stat-icon">${i.icon}</div>
+      <div class="stat-label">${i.label}</div>
+      <div class="stat-value">${i.value}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// REBIRTH
+// ══════════════════════════════════════════════════════════
 document.getElementById('rebirthBtn').addEventListener('click', () => {
   if (state.allTimeHonks < rebirthCost()) return;
   const nextMult = rebirthMult() + 0.5;
-  document.getElementById('modalText').innerHTML =
+  document.getElementById('rebirthModalText').innerHTML =
     `This will reset your honks and all upgrades.<br><br>
      You'll earn a <strong>Golden Feather 🪶</strong>, bringing your total to
-     <strong>${state.rebirthCount + 1}</strong> — giving <strong>×${nextMult.toFixed(1)}</strong>
-     to all production permanently.`;
-  rebirthModal.classList.remove('hidden');
+     <strong>${state.rebirthCount + 1}</strong> — permanently giving
+     <strong>×${nextMult.toFixed(1)}</strong> to all production.<br><br>
+     You'll have <strong>${freeFeathers() + 1}</strong> feathers to spend on Perks.`;
+  document.getElementById('rebirthModal').classList.remove('hidden');
 });
-document.getElementById('modalCancel').addEventListener('click', () => rebirthModal.classList.add('hidden'));
-document.getElementById('modalConfirm').addEventListener('click', () => {
-  rebirthModal.classList.add('hidden');
+document.getElementById('rebirthCancel').addEventListener('click', () =>
+  document.getElementById('rebirthModal').classList.add('hidden'));
+document.getElementById('rebirthConfirm').addEventListener('click', () => {
+  document.getElementById('rebirthModal').classList.add('hidden');
   doRebirth();
 });
-rebirthModal.addEventListener('click', e => { if (e.target === rebirthModal) rebirthModal.classList.add('hidden'); });
+document.getElementById('rebirthModal').addEventListener('click', e => {
+  if (e.target.id === 'rebirthModal') e.target.classList.add('hidden');
+});
 
 function doRebirth() {
   state.rebirthCount++;
-  state.honks = 0;
-  state.allTimeHonks = 0;
-  state.totalClicks = 0;
+  state.honks = 0; state.allTimeHonks = 0; state.totalClicks = 0;
   UPGRADE_DEFS.forEach(u => { upgradeCounts[u.id] = 0; });
+  const headLevel = getPerkLevel('headstart');
+  if (headLevel > 0) { upgradeCounts['gosling'] = headLevel * 10; state.totalUpgradesBought += headLevel * 10; }
   _lastVisibleIds = '';
-  recalcStats();
-  renderUpgrades();
-  updateDisplay();
+  recalcStats(); renderUpgrades(); updateDisplay(); checkAchievements(); renderPerks();
   saveGame();
   spawnParticle(window.innerWidth / 2, window.innerHeight / 2, '🪶 REBIRTH!');
 }
 
-// ── HARD RESET ────────────────────────────────────────────
-const resetModal = document.getElementById('resetModal');
-document.getElementById('resetBtn').addEventListener('click', () => resetModal.classList.remove('hidden'));
-document.getElementById('resetCancel').addEventListener('click', () => resetModal.classList.add('hidden'));
-resetModal.addEventListener('click', e => { if (e.target === resetModal) resetModal.classList.add('hidden'); });
+// ══════════════════════════════════════════════════════════
+// HARD RESET
+// ══════════════════════════════════════════════════════════
+document.getElementById('resetBtn').addEventListener('click', () =>
+  document.getElementById('resetModal').classList.remove('hidden'));
+document.getElementById('resetCancel').addEventListener('click', () =>
+  document.getElementById('resetModal').classList.add('hidden'));
+document.getElementById('resetModal').addEventListener('click', e => {
+  if (e.target.id === 'resetModal') e.target.classList.add('hidden');
+});
 document.getElementById('resetConfirm').addEventListener('click', () => {
-  resetModal.classList.add('hidden');
-  deleteGame();
-  state.honks = 0; state.allTimeHonks = 0; state.grandTotalHonks = 0;
-  state.totalClicks = 0; state.rebirthCount = 0;
+  document.getElementById('resetModal').classList.add('hidden');
+  try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+  Object.assign(state, {
+    honks:0, allTimeHonks:0, grandTotalHonks:0, totalClicks:0,
+    honksPerClick:1, honksPerSec:0, rebirthCount:0, feathersSpent:0,
+    totalUpgradesBought:0, highestHonks:0, sessionStart:Date.now(),
+    totalPlayTime:0, lastSaveTime:Date.now(),
+  });
   UPGRADE_DEFS.forEach(u => { upgradeCounts[u.id] = 0; });
+  Object.keys(perkLevels).forEach(k => delete perkLevels[k]);
+  achievementsUnlocked = [];
   _lastVisibleIds = '';
-  recalcStats(); renderUpgrades(); updateDisplay();
-  flashSaveIndicator('🗑️ Progress deleted');
+  recalcStats(); renderUpgrades(); renderAchievements(); renderPerks(); updateDisplay();
+  flashSave('🗑️ Progress deleted');
 });
 
-// ── DARK MODE ─────────────────────────────────────────────
-const darkToggle = document.getElementById('darkToggle');
+// ══════════════════════════════════════════════════════════
+// BULK BUY
+// ══════════════════════════════════════════════════════════
+document.querySelectorAll('.bulk-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.bulk-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const val = btn.dataset.bulk;
+    bulkAmount = val === 'max' ? 'max' : parseInt(val);
+    renderUpgrades();
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (tab === 'achievements') renderAchievements();
+    if (tab === 'perks')        renderPerks();
+    if (tab === 'stats')        renderStats();
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+// DARK MODE
+// ══════════════════════════════════════════════════════════
 function applyDarkMode(dark) {
   document.body.classList.toggle('dark', dark);
-  darkToggle.textContent = dark ? '☀️' : '🌙';
+  document.getElementById('darkToggle').textContent = dark ? '☀️' : '🌙';
   state.darkMode = dark;
 }
-darkToggle.addEventListener('click', () => {
+document.getElementById('darkToggle').addEventListener('click', () => {
   applyDarkMode(!state.darkMode);
   saveGame();
 });
 
-// ── INIT ──────────────────────────────────────────────────
-function init() {
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+(function init() {
   const loaded = loadGame();
   applyDarkMode(state.darkMode);
+  if (loaded) checkOfflineProgress();
+  else { state.sessionStart = Date.now(); state.lastSaveTime = Date.now(); }
   recalcStats();
   renderUpgrades();
+  renderAchievements();
+  renderPerks();
   updateDisplay();
   requestAnimationFrame(tick);
-  if (loaded) {
-    flashSaveIndicator('✅ Save loaded!');
-  }
-}
-
-init();
+  if (loaded) flashSave('✅ Save loaded!');
+})();
 </script>
 </body>
 </html>
