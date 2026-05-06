@@ -197,28 +197,41 @@
       flex: 0 0 280px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      /* Scroll only this column */
-      height: 100%;
-      overflow-y: auto;
-      padding-bottom: 40px;
-      /* Hide scrollbar visually but keep it functional */
-      scrollbar-width: thin;
-      scrollbar-color: var(--grass) transparent;
+      /* Cap height so it doesn't stretch ugly to the bottom */
+      max-height: min(600px, calc(100vh - 160px));
+      align-self: flex-start;
     }
-    .upgrades-panel::-webkit-scrollbar { width: 4px; }
-    .upgrades-panel::-webkit-scrollbar-track { background: transparent; }
-    .upgrades-panel::-webkit-scrollbar-thumb { background: var(--grass); border-radius: 99px; }
 
     .panel-title {
       font-family: 'Fredoka One', cursive;
       font-size: 1.3rem;
       color: var(--ink);
       text-align: center;
-      padding: 6px 0 2px;
+      padding: 6px 0 8px;
       border-bottom: 3px dashed var(--grass);
-      margin-bottom: 4px;
+      margin-bottom: 0;
+      /* Sticky title — never scrolls */
+      flex-shrink: 0;
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      transition: background 0.3s;
     }
+
+    .upgrade-list-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--grass) transparent;
+    }
+    .upgrade-list-scroll::-webkit-scrollbar { width: 4px; }
+    .upgrade-list-scroll::-webkit-scrollbar-track { background: transparent; }
+    .upgrade-list-scroll::-webkit-scrollbar-thumb { background: var(--grass); border-radius: 99px; }
 
     .cat-header {
       font-family: 'Fredoka One', cursive;
@@ -445,8 +458,11 @@
       .upgrades-panel {
         width: 100%;
         max-width: 400px;
-        height: auto;
+        max-height: none;
+      }
+      .upgrade-list-scroll {
         overflow-y: visible;
+        max-height: none;
         padding-bottom: 40px;
       }
     }
@@ -512,7 +528,9 @@
 
   <div class="upgrades-panel">
     <div class="panel-title">Upgrades</div>
-    <div id="upgradeList"></div>
+    <div class="upgrade-list-scroll">
+      <div id="upgradeList"></div>
+    </div>
   </div>
 
 </div>
