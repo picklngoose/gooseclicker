@@ -460,7 +460,8 @@
     .ach-toast {
       position: fixed;
       bottom: 24px; left: 50%;
-      transform: translateX(-50%) translateY(80px);
+      transform: translateX(-50%) translateY(calc(100% + 48px));
+      opacity: 0;
       background: var(--panel-s);
       border: 2px solid var(--gold-d);
       border-radius: 16px;
@@ -468,10 +469,10 @@
       display: flex; gap: 10px; align-items: center;
       box-shadow: 0 8px 32px #0004;
       z-index: 2000;
-      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), opacity 0.3s ease;
       max-width: 320px;
     }
-    .ach-toast.show { transform: translateX(-50%) translateY(0); }
+    .ach-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .ach-toast-icon { font-size: 1.8rem; }
     .ach-toast-title { font-family: 'Fredoka One', cursive; font-size: 0.88rem; color: var(--gold-d); }
     .ach-toast-name { font-weight: 800; font-size: 0.92rem; color: var(--ink); }
