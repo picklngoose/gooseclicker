@@ -595,7 +595,7 @@ UPGRADE_DEFS.forEach(u => { upgradeCounts[u.id] = 0; });
 const SAVE_KEY = 'goose-clicker-save';
 let saveIndicatorTimer = null;
 
-async function saveGame() {
+function saveGame() {
   const saveData = {
     honks: state.honks,
     allTimeHonks: state.allTimeHonks,
@@ -606,24 +606,18 @@ async function saveGame() {
     upgradeCounts: { ...upgradeCounts },
   };
   try {
-    await window.storage.set(SAVE_KEY, JSON.stringify(saveData));
+    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
     flashSaveIndicator('💾 Saved!');
   } catch (e) {
     flashSaveIndicator('⚠️ Save failed');
   }
 }
 
-async function loadGame() {
-  let result;
+function loadGame() {
   try {
-    result = await window.storage.get(SAVE_KEY);
-  } catch (e) {
-    // Key doesn't exist yet (first time playing) — not a real error
-    return false;
-  }
-  if (!result || !result.value) return false;
-  try {
-    const d = JSON.parse(result.value);
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const d = JSON.parse(raw);
     state.honks           = d.honks           ?? 0;
     state.allTimeHonks    = d.allTimeHonks    ?? 0;
     state.grandTotalHonks = d.grandTotalHonks ?? 0;
@@ -637,15 +631,12 @@ async function loadGame() {
     }
     return true;
   } catch (e) {
-    console.error('Failed to parse save data:', e);
     return false;
   }
 }
 
-async function deleteGame() {
-  try {
-    await window.storage.delete(SAVE_KEY);
-  } catch (e) { /* ignore */ }
+function deleteGame() {
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
 }
 
 function flashSaveIndicator(msg) {
@@ -862,9 +853,9 @@ const resetModal = document.getElementById('resetModal');
 document.getElementById('resetBtn').addEventListener('click', () => resetModal.classList.remove('hidden'));
 document.getElementById('resetCancel').addEventListener('click', () => resetModal.classList.add('hidden'));
 resetModal.addEventListener('click', e => { if (e.target === resetModal) resetModal.classList.add('hidden'); });
-document.getElementById('resetConfirm').addEventListener('click', async () => {
+document.getElementById('resetConfirm').addEventListener('click', () => {
   resetModal.classList.add('hidden');
-  await deleteGame();
+  deleteGame();
   state.honks = 0; state.allTimeHonks = 0; state.grandTotalHonks = 0;
   state.totalClicks = 0; state.rebirthCount = 0;
   UPGRADE_DEFS.forEach(u => { upgradeCounts[u.id] = 0; });
@@ -886,8 +877,8 @@ darkToggle.addEventListener('click', () => {
 });
 
 // ── INIT ──────────────────────────────────────────────────
-async function init() {
-  const loaded = await loadGame();
+function init() {
+  const loaded = loadGame();
   applyDarkMode(state.darkMode);
   recalcStats();
   renderUpgrades();
